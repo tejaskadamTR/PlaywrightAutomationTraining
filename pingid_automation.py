@@ -82,70 +82,104 @@ class PingIDAutomation:
             str: The MFA code copied from PingID, or None if failed
         """
         try:
+            # Wait for window to fully load
+            time.sleep(1)
+
             # Get the main window
             dlg = self.app.top_window()
 
-            # Find and fill the PIN input field
-            # Note: You may need to adjust the control identifiers based on your PingID version
+            # Find and fill the PIN input field - try multiple methods
             print("Looking for PIN input field...")
+            pin_input = None
 
-            # Method 1: Try to find by Edit control type
+            # Method 1: Try by found_index (most reliable - gets first Edit control)
             try:
                 pin_input = dlg.child_window(control_type="Edit", found_index=0)
+                print("Found PIN input by found_index")
+            except Exception as e1:
+                print(f"Method 1 failed: {str(e1)}")
+
+                # Method 2: Try by auto_id
+                try:
+                    pin_input = dlg.child_window(auto_id="JavaFX42", control_type="Edit")
+                    print("Found PIN input by auto_id")
+                except Exception as e2:
+                    print(f"Method 2 failed: {str(e2)}")
+
+                    # Method 3: Try getting all Edit controls
+                    try:
+                        edit_controls = dlg.descendants(control_type="Edit")
+                        if edit_controls:
+                            pin_input = edit_controls[0]
+                            print("Found PIN input from descendants")
+                        else:
+                            print("No Edit controls found")
+                    except Exception as e3:
+                        print(f"Method 3 failed: {str(e3)}")
+
+            if pin_input is None:
+                raise Exception("Could not find PIN input field with any method")
+
+            # Enter the PIN
+            try:
                 pin_input.set_focus()
-                pin_input.set_edit_text(self.pin)
+                time.sleep(0.3)
+                pin_input.type_keys(self.pin, with_spaces=False, pause=0.1)
                 print(f"Entered PIN successfully")
                 time.sleep(0.5)
             except Exception as e:
-                print(f"Could not find PIN input by Edit control: {str(e)}")
-                # Method 2: Try by name/automation_id (update these if you know the specific IDs)
-                try:
-                    pin_input = dlg.child_window(title_re=".*PIN.*", control_type="Edit")
-                    pin_input.set_focus()
-                    pin_input.set_edit_text(self.pin)
-                    print(f"Entered PIN successfully using title_re")
-                    time.sleep(0.5)
-                except Exception as e2:
-                    print(f"Could not find PIN input by title: {str(e2)}")
-                    raise
+                print(f"Error entering PIN: {str(e)}")
+                raise
 
-            # Find and click Next button
+            # Find and click Next button - try multiple methods
             print("Looking for Next button...")
+            next_button = None
+
+            # Try by title first (most reliable for buttons)
             try:
                 next_button = dlg.child_window(title="Next", control_type="Button")
-                next_button.click()
-                print("Clicked Next button")
-                time.sleep(2)  # Wait for code to be generated
-            except Exception as e:
-                print(f"Could not find Next button by title: {str(e)}")
-                # Try alternative methods
-                try:
-                    next_button = dlg.child_window(title_re=".*Next.*", control_type="Button")
-                    next_button.click()
-                    print("Clicked Next button using title_re")
-                    time.sleep(2)
-                except Exception as e2:
-                    print(f"Could not find Next button: {str(e2)}")
-                    raise
+                print("Found Next button by title")
+            except Exception as e1:
+                print(f"Method 1 failed: {str(e1)}")
 
-            # Find and click Copy button
+                # Try by auto_id
+                try:
+                    next_button = dlg.child_window(auto_id="JavaFX49", control_type="Button")
+                    print("Found Next button by auto_id")
+                except Exception as e2:
+                    print(f"Method 2 failed: {str(e2)}")
+
+            if next_button is None:
+                raise Exception("Could not find Next button")
+
+            next_button.click()
+            print("Clicked Next button")
+            time.sleep(3)  # Wait for code to be generated
+
+            # Find and click Copy button - try multiple methods
             print("Looking for Copy button...")
+            copy_button = None
+
+            # Try by title first (most reliable for buttons)
             try:
                 copy_button = dlg.child_window(title="Copy", control_type="Button")
-                copy_button.click()
-                print("Clicked Copy button")
-                time.sleep(0.5)
-            except Exception as e:
-                print(f"Could not find Copy button by title: {str(e)}")
-                # Try alternative methods
+                print("Found Copy button by title")
+            except Exception as e1:
+                print(f"Method 1 failed: {str(e1)}")
+
+                # Try by auto_id
                 try:
-                    copy_button = dlg.child_window(title_re=".*Copy.*", control_type="Button")
-                    copy_button.click()
-                    print("Clicked Copy button using title_re")
-                    time.sleep(0.5)
+                    copy_button = dlg.child_window(auto_id="JavaFX32", control_type="Button")
+                    print("Found Copy button by auto_id")
                 except Exception as e2:
-                    print(f"Could not find Copy button: {str(e2)}")
-                    raise
+                    print(f"Method 2 failed: {str(e2)}")
+
+            if copy_button is None:
+                raise Exception("Could not find Copy button")
+
+            copy_button.click()
+            print("Clicked Copy button")
+            time.sleep(0.5)
 
             # Get the code from clipboard
             mfa_code = pyperclip.paste()
