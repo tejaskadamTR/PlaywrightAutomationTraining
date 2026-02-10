@@ -2,16 +2,17 @@ import re
 import pytest
 import time
 from playwright.sync_api import Page, expect
+from config import SSO_CREDENTIALS
 
 
 def test_example(page: Page):
     page.goto("https://qat-scdashboard.sureprep.com/")
     page.get_by_role("link", name="CONTINUE").click()
     page.get_by_role("textbox", name="Email").click()
-    page.get_by_role("textbox", name="Email").fill("tejas.kadam@thomsonreuters.com")
+    page.get_by_role("textbox", name="Email").fill(SSO_CREDENTIALS["email"])
     page.get_by_role("button", name="Sign in").click()
     page.get_by_role("textbox", name="ex. 6036943, C603694, X696046").click()
-    page.get_by_role("textbox", name="ex. 6036943, C603694, X696046").fill("6124436")
+    page.get_by_role("textbox", name="ex. 6036943, C603694, X696046").fill(SSO_CREDENTIALS["employee_id"])
     page.locator("#password").click()
     page.locator("#password").fill(SSO_CREDENTIALS["password"])
     page.locator("label div").filter(has_text="Remember my username").locator("div").click()

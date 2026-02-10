@@ -8,7 +8,7 @@ def test_fileroomLogin(page : Page):
     page.locator(".Cont-Btn").click()
     page.locator("#username").fill(SSO_CREDENTIALS["email"])
     page.locator("._button-login-id").click()
-    page.locator("#username").fill("6124436")
+    page.locator("#username").fill(SSO_CREDENTIALS["employee_id"])
     page.locator("#password").fill(SSO_CREDENTIALS["password"])
     page.locator(".remember-username").check()
  
