@@ -8,7 +8,7 @@ def test_fileroomLogin(page : Page):
     page.locator("#username").fill("tejas.kadam@thomsonreuters.com")
     page.locator("._button-login-id").click()
     page.locator("#username").fill("6124436")
-    page.locator("#password").fill("QAengineer@003")
+    page.locator("#password").fill("NA")
     page.locator(".remember-username").check()
  
     page.locator("#signOnButton").click()
