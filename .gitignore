@@ -43,3 +43,6 @@ videos/
 # Logs
 *.log
 desktop.log.1
+
+#Git
+GIT_WORKFLOW.md
