@@ -13,7 +13,7 @@ def test_example(page: Page):
     page.get_by_role("textbox", name="ex. 6036943, C603694, X696046").click()
     page.get_by_role("textbox", name="ex. 6036943, C603694, X696046").fill("6124436")
     page.locator("#password").click()
-    page.locator("#password").fill("QAengineer@003")
+    page.locator("#password").fill("zzz")
     page.locator("label div").filter(has_text="Remember my username").locator("div").click()
     page.get_by_text("Sign On").click()
     '''page.goto("https://qat-scdashboard.sureprep.com/SSO/Location")
