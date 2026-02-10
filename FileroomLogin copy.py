@@ -1,14 +1,15 @@
 from playwright.sync_api import Page, expect
 import pytest
+from config import SSO_CREDENTIALS
 
 @pytest.mark.smoke
 def test_fileroomLogin(page : Page):
     page.goto("https://production.sureprep.com/")
     page.locator(".Cont-Btn").click()
-    page.locator("#username").fill("tejas.kadam@thomsonreuters.com")
+    page.locator("#username").fill(SSO_CREDENTIALS["email"])
     page.locator("._button-login-id").click()
     page.locator("#username").fill("6124436")
-    page.locator("#password").fill("QAengineer@003")
+    page.locator("#password").fill(SSO_CREDENTIALS["password"])
     page.locator(".remember-username").check()
  
     page.locator("#signOnButton").click()

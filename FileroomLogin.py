@@ -2,6 +2,7 @@ from playwright.sync_api import Page, expect
 import pytest
 import allure
 from pingid_automation import automate_pingid_mfa
+from config import SSO_CREDENTIALS
 
 @pytest.mark.smoke
 @allure.feature('Authentication')
@@ -21,8 +22,8 @@ def test_fileroomLogin(page: Page):
         page.locator(".Cont-Btn").click()
 
     with allure.step("Enter email for SSO authentication"):
-        page.locator("#username").fill("tejas.kadam@thomsonreuters.com")
-        allure.attach("tejas.kadam@thomsonreuters.com",
+        page.locator("#username").fill(SSO_CREDENTIALS["email"])
+        allure.attach(SSO_CREDENTIALS["email"],
                      name="Email Entered",
                      attachment_type=allure.attachment_type.TEXT)
 
@@ -30,17 +31,18 @@ def test_fileroomLogin(page: Page):
         page.locator("._button-login-id").click()
 
     with allure.step("Enter employee ID"):
-        page.locator("#username").fill("6124436")
-        allure.attach("6124436", name="Employee ID", attachment_type=allure.attachment_type.TEXT)
+        page.locator("#username").fill(SSO_CREDENTIALS["employee_id"])
+        allure.attach(SSO_CREDENTIALS["employee_id"], name="Employee ID", attachment_type=allure.attachment_type.TEXT)
 
     with allure.step("Enter password"):
-        page.locator("#password").fill("QAengineer@003")
+        page.locator("#password").fill(SSO_CREDENTIALS["password"])
 
     with allure.step("Check 'Remember username' option"):
         page.locator(".remember-username").check()
 
     with allure.step("Click Sign On button"):
-        page.locator("#signOnButton").click()
+        page.wait_for_timeout(1000)  # Wait 1 second
+        page.locator("#signOnButton").click(force=True)
 
     with allure.step("Handle PingID MFA authentication"):
         # Launch PingID.exe and get MFA code

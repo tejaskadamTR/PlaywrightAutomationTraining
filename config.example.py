@@ -10,6 +10,13 @@ PINGID_CONFIG = {
     "wait_timeout": 10  # Seconds to wait for PingID window to appear
 }
 
+# SSO Credentials
+SSO_CREDENTIALS = {
+    "email": "YOUR_EMAIL@DOMAIN.COM",
+    "employee_id": "YOUR_EMPLOYEE_ID",
+    "password": "YOUR_PASSWORD"
+}
+
 # Browser Configuration
 BROWSER_CONFIG = {
     "headless": False,
