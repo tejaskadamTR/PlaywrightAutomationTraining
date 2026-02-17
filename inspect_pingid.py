@@ -25,7 +25,7 @@ def main():
     time.sleep(3)  # Give extra time for window to fully load
 
     if not pingid.connect_to_pingid_window():
-        print("❌ Failed to connect to PingID window")
+        print(" Failed to connect to PingID window")
         return
 
     # Print window information
@@ -34,7 +34,7 @@ def main():
     pingid.print_window_info()
     print("=" * 60)
 
-    print("\n✅ Inspection complete!")
+    print("\n Inspection complete!")
     print("\nLook for controls with these types:")
     print("  - Edit (for PIN input)")
     print("  - Button (for Next and Copy buttons)")

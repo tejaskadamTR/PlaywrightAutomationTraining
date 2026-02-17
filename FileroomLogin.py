@@ -67,6 +67,7 @@ def test_fileroomLogin(page: Page):
                          attachment_type=allure.attachment_type.TEXT)
 
             # Click Sign On button
+            page.locator("body").click()
             page.locator("input[value='Sign On']").click()
             allure.attach("Clicked Sign On button after MFA",
                          name="Sign On Action",
